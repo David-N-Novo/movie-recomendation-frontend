@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 
@@ -15,6 +15,13 @@ function App() {
       "Mine": 5
     };
   });
+
+  useEffect(() => {
+    const savedUsers = localStorage.getItem("users");
+    if (!savedUsers) {
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+  }, [users]);
 
   return (
     <Router>
