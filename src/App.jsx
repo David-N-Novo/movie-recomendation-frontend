@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState("");
+  //const [currentUser, setCurrentUser] = useState("");
   const [users, setUsers] = useState(() => {
     const savedUsers = localStorage.getItem("users");
     return savedUsers ? JSON.parse(savedUsers) : {
@@ -16,12 +16,21 @@ function App() {
     };
   });
 
+  const [currentUser, setCurrentUser] = useState(() => {
+    return localStorage.getItem("currentUser") || "";
+  });
+
   useEffect(() => {
-    const savedUsers = localStorage.getItem("users");
-    if (!savedUsers) {
-      localStorage.setItem("users", JSON.stringify(users));
-    }
+    localStorage.setItem("users", JSON.stringify(users));
   }, [users]);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem("currentUser", currentUser);
+    } else {
+      localStorage.removeItem("currentUser");
+    }
+  }, [currentUser]);
 
   return (
     <Router>
@@ -34,6 +43,7 @@ function App() {
           path="/" 
           element={currentUser ? <HomePage currentUser={currentUser} /> : <Navigate to="/login" />}
         />
+        <Route path="*" element={<Navigate to="/" /> }/>
       </Routes>
     </Router>
   );

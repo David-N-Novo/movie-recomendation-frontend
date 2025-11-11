@@ -6,27 +6,32 @@ function LoginPage({ setCurrentUser, users, setUsers }) {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (!username) {
+    const cleanName = username.trim();
+
+    if (!cleanName) {
       alert("Please enter your username!");
       return;
     }
 
-    if (!users[username]) {
+    if (!users[cleanName]) {
       alert("Username not found. Please sign up first!");
       return;
     }
 
-    setCurrentUser(username);
+    setCurrentUser(cleanName);
+    localStorage.setItem("currentUser", cleanName);
     navigate("/");
   };
 
   const handleSignUp = () => {
-    if (!username) {
+    const cleanName = username.trim();
+
+    if (!cleanName) {
       alert("Please enter a username to sign up!");
       return;
     }
 
-    if (users[username]) {
+    if (users[cleanName]) {
       alert("Username already exists. Please log in instead!");
       return;
     }
@@ -34,13 +39,14 @@ function LoginPage({ setCurrentUser, users, setUsers }) {
     const newUserId = Object.keys(users).length + 1;
     const updatedUsers = {
       ...users,
-      [username]: newUserId
+      [cleanName]: newUserId,
     };
 
     setUsers(updatedUsers);
     localStorage.setItem("users", JSON.stringify(updatedUsers));
 
     setCurrentUser(username);
+    localStorage.setItem("currentUser", cleanName);
     navigate("/");
   };
 
